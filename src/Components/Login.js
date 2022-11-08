@@ -1,4 +1,4 @@
-import "../App.css";
+{/*import "../App.css";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -10,7 +10,7 @@ const renderForm = (
       <div className="input-container">
         <label>Login with Email </label>
         <input type="text" name="uname" required />
-        {/**{renderErrorMessage("uname")**/}
+        {/**{renderErrorMessage("uname")}
         window.alert("Invalis Username");
       </div>
       <div className="button-container">
@@ -22,7 +22,7 @@ const renderForm = (
         <label>Create User</label>
         <input type="text" name="uname" required />
         {/*renderErrorMessage("uname")*/}
-        window.alert("Invalis Username");
+      {/*  window.alert("Invalis Username");
       </div>
       <div className="button-container">
         <input type="submit" />
@@ -50,4 +50,4 @@ export default class Login extends React.Component {
       </React.Fragment>
     );
   }
-}
+}*/}

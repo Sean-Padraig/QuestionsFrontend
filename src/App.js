@@ -8,7 +8,7 @@ import {
   BrowserRouter,
   Link,
 } from "react-router-dom";
-import Login from './Components/Login';
+//import Login from './Components/Login';
 
 function App() {
   // React States
@@ -87,7 +87,7 @@ function App() {
 
   return (
     <React.Fragment>
- {/*    <div className="app">
+     <div className="app">
       <div className="login-form">
         <div className="title">Sign In</div>
         {isSubmitted ? <div>
@@ -99,7 +99,7 @@ function App() {
           </div> : renderForm}
       </div>
   </div>
-*/}
+
     <BrowserRouter>
           <Routes>
             <Route path="questions" 
