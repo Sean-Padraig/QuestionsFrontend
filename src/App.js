@@ -1,12 +1,6 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
-import {
-	Route,
-	Routes,
-	BrowserRouter as Router,
-	Link,
-	useNavigate,
-} from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router, Link } from "react-router-dom";
 import Questions from "./Components/Questions";
 import Output from "./Components/Output";
 
@@ -16,6 +10,7 @@ function App() {
 	const [questions, setQuestions] = useState();
 	const [errorMessages, setErrorMessages] = useState({});
 	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [showForm, setShowForm] = useState(true);
 	useEffect(() => {
 		getQuestions();
 	}, []);
@@ -38,7 +33,6 @@ function App() {
 		};
 		const data = await fetch("http://localhost:5243/login", options);
 		const userData = await data.json();
-		console.log(userData);
 		return userData;
 	};
 	const database = [
@@ -56,9 +50,23 @@ function App() {
 	const handleLogin = e => {
 		e.preventDefault();
 		const userObject = Object.fromEntries(new FormData(e.target));
-
-		console.log(userObject);
-		postRegister(userObject);
+		let userFetch;
+		postRegister(userObject)
+			.then(data => {
+				userFetch = data;
+			})
+			.then(() => {
+				console.log(userFetch);
+				if (userFetch.data) {
+					setUser(() => {
+						return user;
+					});
+					setIsSubmitted(true);
+					setShowForm(false);
+				} else {
+					alert("bitch");
+				}
+			});
 	};
 	const handleSubmit = event => {
 		//Prevent page reload
@@ -115,31 +123,34 @@ function App() {
 	return (
 		<React.Fragment>
 			<Router>
-				<div className="app">
-					<div className="login-form">
-						<div className="title">Sign In</div>
-						{isSubmitted ? (
-							<div>
-								<p>User is successfully logged in</p>
-								<br></br>
-								<button>
-									<Link to="/question">Continue</Link>
-								</button>
-							</div>
-						) : (
-							renderForm
-						)}
-					</div>
-				</div>
-
 				<Routes>
 					<Route
 						path="questions"
 						element={<Questions questions={questions}></Questions>}
 					></Route>
-
 					<Route path="output" element={<Output></Output>}></Route>
 				</Routes>
+				<div className="app">
+					{showForm && (
+						<div className="login-form">
+							<div className="title">Sign In</div>
+							{renderForm}
+						</div>
+					)}
+					{isSubmitted && (
+						<div>
+							<p>User is successfully logged in</p>
+							<br></br>
+							<button
+								onClick={() => {
+									setIsSubmitted(false);
+								}}
+							>
+								<Link to="/questions">Continue</Link>
+							</button>
+						</div>
+					)}
+				</div>
 			</Router>
 		</React.Fragment>
 	);
