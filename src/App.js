@@ -1,24 +1,21 @@
 import './App.css';
 import React, { useState }  from 'react';
-import Questions from './Components/Questions';
-import Output from './Components/Output';
 import {
   Route,
   Routes,
   BrowserRouter,
   Link,
+  
 } from "react-router-dom";
-//import Login from './Components/Login';
+import Questions from './Components/Questions';
+import Output from './Components/Output';
 
 function App() {
   // React States
-
   const [errorMessages, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   // User Login info
-
-
   const database = [
     {
       username: "user1",
@@ -87,7 +84,7 @@ function App() {
 
   return (
     <React.Fragment>
-     <div className="app">
+    <div className="app">
       <div className="login-form">
         <div className="title">Sign In</div>
         {isSubmitted ? <div>
@@ -103,7 +100,8 @@ function App() {
     <BrowserRouter>
           <Routes>
             <Route path="questions" 
-            element={<Questions></Questions>}></Route>      
+            element={<Questions></Questions>}></Route>
+            
             <Route path="output" 
             element={<Output></Output>}></Route>
             </Routes>
