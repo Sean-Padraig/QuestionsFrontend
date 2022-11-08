@@ -1,11 +1,25 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
-import { Route, Routes, BrowserRouter, Link } from "react-router-dom";
+import {
+	Route,
+	Routes,
+	BrowserRouter as Router,
+	Link,
+	useNavigate,
+} from "react-router-dom";
 import Questions from "./Components/Questions";
 import Output from "./Components/Output";
 
 function App() {
 	// React States
+	const [user, setUser] = useState(null);
+	const [questions, setQuestions] = useState();
+	const [errorMessages, setErrorMessages] = useState({});
+	const [isSubmitted, setIsSubmitted] = useState(false);
+	useEffect(() => {
+		getQuestions();
+	}, []);
+	// User Login info
 	const getQuestions = async () => {
 		const data = await fetch("http://localhost:5243/question/all");
 		const qData = await data.json();
@@ -14,14 +28,19 @@ function App() {
 			return qData;
 		});
 	};
-	const postRegister = async user => {};
-	const [questions, setQuestions] = useState();
-	const [errorMessages, setErrorMessages] = useState({});
-	const [isSubmitted, setIsSubmitted] = useState(false);
-	useEffect(() => {
-		getQuestions();
-	}, []);
-	// User Login info
+	const postRegister = async user => {
+		const options = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(user),
+		};
+		const data = await fetch("http://localhost:5243/login", options);
+		const userData = await data.json();
+		console.log(userData);
+		return userData;
+	};
 	const database = [
 		{
 			username: "user1",
@@ -34,7 +53,13 @@ function App() {
 	const errors = {
 		uname: "invalid username",
 	};
+	const handleLogin = e => {
+		e.preventDefault();
+		const userObject = Object.fromEntries(new FormData(e.target));
 
+		console.log(userObject);
+		postRegister(userObject);
+	};
 	const handleSubmit = event => {
 		//Prevent page reload
 		event.preventDefault();
@@ -64,10 +89,10 @@ function App() {
 	// JSX code for login form
 	const renderForm = (
 		<div className="form">
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleLogin}>
 				<div className="input-container">
 					<label>Login with Email </label>
-					<input type="text" name="uname" required />
+					<input type="text" name="email" required />
 					{renderErrorMessage("uname")}
 				</div>
 				<div className="button-container">
@@ -89,24 +114,24 @@ function App() {
 
 	return (
 		<React.Fragment>
-			<div className="app">
-				<div className="login-form">
-					<div className="title">Sign In</div>
-					{isSubmitted ? (
-						<div>
-							<p>User is successfully logged in</p>
-							<br></br>
-							<button>
-								<Link to="/question">Continue</Link>
-							</button>
-						</div>
-					) : (
-						renderForm
-					)}
+			<Router>
+				<div className="app">
+					<div className="login-form">
+						<div className="title">Sign In</div>
+						{isSubmitted ? (
+							<div>
+								<p>User is successfully logged in</p>
+								<br></br>
+								<button>
+									<Link to="/question">Continue</Link>
+								</button>
+							</div>
+						) : (
+							renderForm
+						)}
+					</div>
 				</div>
-			</div>
 
-			<BrowserRouter>
 				<Routes>
 					<Route
 						path="questions"
@@ -115,7 +140,7 @@ function App() {
 
 					<Route path="output" element={<Output></Output>}></Route>
 				</Routes>
-			</BrowserRouter>
+			</Router>
 		</React.Fragment>
 	);
 }
